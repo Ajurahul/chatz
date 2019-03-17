@@ -2,6 +2,7 @@ package com.mysocial.chatz;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -17,21 +18,26 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.firebase.client.Firebase;
-
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Register extends AppCompatActivity {
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+
+public class Register extends AppCompatActivity implements View.OnClickListener{
+
     EditText username, password;
     Button registerButton;
     String user, pass;
     TextView login;
-
+    private FirebaseAuth firebaseAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
+        firebaseAuth = FirebaseAuth.getInstance();
         username = (EditText)findViewById(R.id.username);
         password = (EditText)findViewById(R.id.password);
         registerButton = (Button)findViewById(R.id.registerButton);
@@ -49,8 +55,8 @@ public class Register extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                user = username.getText().toString();
-                pass = password.getText().toString();
+                user = username.getText().toString().trim();
+                pass = password.getText().toString().trim();
 
                 if(user.equals("")){
                     username.setError("can't be blank");
@@ -66,6 +72,10 @@ public class Register extends AppCompatActivity {
                     pd.show();
 
                     String url = "https://chat-33452.firebaseio.com/users.json";
+
+                    firebaseAuth.createUserWithEmailAndPassword(user, pass);
+
+
 
                     StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>(){
                         @Override
@@ -108,5 +118,10 @@ public class Register extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 }
