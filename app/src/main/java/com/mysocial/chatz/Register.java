@@ -32,6 +32,7 @@ public class Register extends AppCompatActivity {
     Button registerButton;
     String user, pass,userna;
     TextView login;
+    Firebase reference1;
     private FirebaseAuth firebaseAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,7 @@ public class Register extends AppCompatActivity {
         login = (TextView)findViewById(R.id.login);
 
         Firebase.setAndroidContext(this);
-
+        reference1 = new Firebase("https://chat-33452.firebaseio.com/users");
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,11 +73,14 @@ public class Register extends AppCompatActivity {
                     pd.setMessage("Loading...");
                     pd.show();
 
-                    String url = "https://chat-33452.firebaseio.com/users.json";
 
                     firebaseAuth.createUserWithEmailAndPassword(user, pass);
+
                     pd.dismiss();
              UserDetails.username = userna;
+                    reference1.child(userna).child("password").setValue(pass);
+
+                    Toast.makeText(Register.this, "registration successful", Toast.LENGTH_LONG).show();
 
 
 

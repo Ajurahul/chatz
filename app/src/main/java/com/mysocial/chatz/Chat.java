@@ -47,7 +47,7 @@ public class Chat extends AppCompatActivity {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String messageText = messageArea.getText().toString();
+                String messageText = messageArea.getText().toString().trim();
 
                 if(!messageText.equals("")){
                     Map<String, String> map = new HashMap<String, String>();
@@ -64,8 +64,8 @@ public class Chat extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Map map = dataSnapshot.getValue(Map.class);
-                String message = map.get("message").toString();
-                String userName = map.get("user").toString();
+                String message = map.get("message").toString().trim();
+                String userName = map.get("user").toString().trim();
 
                 if(userName.equals(UserDetails.username)){
                     addMessageBox("You:-\n" + message, 1);

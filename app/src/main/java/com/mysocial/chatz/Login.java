@@ -73,6 +73,10 @@ public class Login extends AppCompatActivity {
                                 finish();
                                 startActivity(new Intent(getApplicationContext(),Chat.class));
                             }
+                            else{
+                                Toast.makeText(Login.this, "Wrong  username or password or", Toast.LENGTH_LONG).show();
+
+                            }
                         }
                     });
 
