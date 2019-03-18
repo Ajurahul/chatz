@@ -26,11 +26,11 @@ import org.json.JSONObject;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-public class Register extends AppCompatActivity implements View.OnClickListener{
+public class Register extends AppCompatActivity {
 
-    EditText username, password;
+    EditText username, password,usern;
     Button registerButton;
-    String user, pass;
+    String user, pass,userna;
     TextView login;
     private FirebaseAuth firebaseAuth;
     @Override
@@ -38,6 +38,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         firebaseAuth = FirebaseAuth.getInstance();
+        usern = (EditText)findViewById(R.id.usern);
         username = (EditText)findViewById(R.id.username);
         password = (EditText)findViewById(R.id.password);
         registerButton = (Button)findViewById(R.id.registerButton);
@@ -57,7 +58,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener{
             public void onClick(View v) {
                 user = username.getText().toString().trim();
                 pass = password.getText().toString().trim();
-
+                userna = usern.getText().toString().trim();
                 if(user.equals("")){
                     username.setError("can't be blank");
                 }
@@ -74,54 +75,15 @@ public class Register extends AppCompatActivity implements View.OnClickListener{
                     String url = "https://chat-33452.firebaseio.com/users.json";
 
                     firebaseAuth.createUserWithEmailAndPassword(user, pass);
+                    pd.dismiss();
+             UserDetails.username = userna;
 
 
 
-                    StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>(){
-                        @Override
-                        public void onResponse(String s) {
-                            Firebase reference = new Firebase("https://chat-33452.firebaseio.com/users");
-
-                            if(s.equals("null")) {
-                                reference.child(user).child("password").setValue(pass);
-                                Toast.makeText(Register.this, "registration successful", Toast.LENGTH_LONG).show();
-                            }
-                            else {
-                                try {
-                                    JSONObject obj = new JSONObject(s);
-
-                                    if (!obj.has(user)) {
-                                        reference.child(user).child("password").setValue(pass);
-                                        Toast.makeText(Register.this, "registration successful", Toast.LENGTH_LONG).show();
-                                    } else {
-                                        Toast.makeText(Register.this, "username already exists", Toast.LENGTH_LONG).show();
-                                    }
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-
-                            pd.dismiss();
-                        }
-
-                    },new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError volleyError) {
-                            System.out.println("" + volleyError );
-                            pd.dismiss();
-                        }
-                    });
-
-                    RequestQueue rQueue = Volley.newRequestQueue(Register.this);
-                    rQueue.add(request);
                 }
             }
         });
     }
 
-    @Override
-    public void onClick(View v) {
 
-    }
 }
